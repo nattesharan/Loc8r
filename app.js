@@ -6,8 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./app_server/routes/index');
+var routesApi = require('./app_api/routes/index')
 var users = require('./app_server/routes/users');
-
+var mongoose = require('mongoose')
 var app = express();
 
 // view engine setup
@@ -23,14 +24,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-
+app.use('/api', routesApi);
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
-
+var dbUri = 'mongodb://localhost/Loc8r';
+mongoose.createConnection(dbUri);
+mongoose.connection.on('connected', function() {
+    console.log('Mongo DB connected by ', dbUri);
+});
+mongoose.connection.on('error', function(error) {
+    console.log('Mongoose Error ', error);
+});
+mongoose.connection.on('disconnected', function() {
+    console.log('Mongoose Disconnected');
+});
 /// error handlers
 
 // development error handler
