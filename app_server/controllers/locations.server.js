@@ -69,5 +69,7 @@ exports.locationInfo = function(req, res) {
     });
 };
 exports.addReview = function(req, res) {
-    res.render('location-review');
+    res.render('location-review', {
+        title: 'Review Starcups'
+    });
 };
